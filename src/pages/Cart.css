@@ -1,0 +1,26 @@
+/* src/pages/Cart.css */
+.cart-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.cart-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cart-container li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.checkout-btn {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: darkgreen;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
