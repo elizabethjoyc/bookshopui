@@ -1,47 +1,55 @@
-// src/pages/BookList.js
-import React, { useState } from "react";
-import { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+
+
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./BookList.css";
+import { CartContext } from "../context/CartContext";
 
+function BookList({ addToCart }) {
+  const [books, setBooks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
-const booksData = [
-  { id: 1, title: "The Great Gatsby", author: "F. Scott Fitzgerald" },
-  { id: 2, title: "To Kill a Mockingbird", author: "Harper Lee" },
-  { id: 3, title: "1984", author: "George Orwell" },
-  { id: 4, title: "Pride and Prejudice", author: "Jane Austen" },
-  { id: 5, title: "Moby Dick", author: "Herman Melville" },
-  { id: 6, title: "War and Peace", author: "Leo Tolstoy" },
-];
+  useEffect(() => {
+    axios.get("http://localhost:8080/stock")
+      .then(res => setBooks(res.data))
+      .catch(err => console.error("Error fetching books", err));
+  }, []);
 
-const BookList = () => {
-  const [search, setSearch] = useState("");
-  const { addToCart } = useContext(CartContext);
-
-  const filteredBooks = booksData.filter((book) =>
-    book.title.toLowerCase().includes(search.toLowerCase())
+  // Filter books based on search term
+  const filteredBooks = books.filter((book) =>
+    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    book.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="book-container">
+    <div className="book-list-container">
+      <h2>Available Books</h2>
+
       <input
         type="text"
-        placeholder="Search books..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search by title or author..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
         className="search-bar"
       />
-      <div className="book-grid">
-        {filteredBooks.map((book) => (
-          <div key={book.id} className="book-card">
-            <h3>{book.title}</h3>
-            <p>{book.author}</p>
-            <button onClick={() => addToCart(book)}>Add to Cart</button>
-          </div>
-        ))}
-      </div>
+
+      {filteredBooks.length === 0 ? (
+        <p>No books found.</p>
+      ) : (
+        <div className="book-grid">
+          {filteredBooks.map((book, index) => (
+            <div key={index} className="book-card">
+              <h3>{book.title}</h3>
+              <p><strong>Author:</strong> {book.author}</p>
+              <p><strong>Price:</strong> €{book.price.toFixed(2)}</p>
+              <button onClick={() => addToCart(book)}>Add to Cart</button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
-};
+}
 
 export default BookList;

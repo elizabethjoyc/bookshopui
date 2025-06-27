@@ -1,86 +1,45 @@
-// src/pages/Register.js
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Register.css";
 
 function Register() {
-  const [formData, setFormData] = useState({
+  const [user, setUser] = useState({
     name: "",
     surname: "",
     dob: "",
     address: "",
     phone: "",
-    email: "",
+    email: ""
   });
 
-  const navigate = useNavigate();
-
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Registration Successful!");
-    navigate("/login");
+
+    try {
+      const response = await axios.post("http://localhost:8080/users", user);
+      console.log("User registered:", response.data);
+      alert("Registration successful!");
+      setUser({ name: "", surname: "", dob: "", address: "", phone: "", email: "" });
+    } catch (error) {
+      console.error("Error registering user:", error);
+      alert("Registration failed.");
+    }
   };
 
   return (
     <div className="register-container">
       <h2>User Registration</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="First Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="surname"
-          placeholder="Surname"
-          value={formData.surname}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="date"
-          name="dob"
-          placeholder="Date of Birth"
-          value={formData.dob}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="address"
-          placeholder="Address"
-          value={formData.address}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="tel"
-          name="phone"
-          placeholder="Phone"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
+        <input name="name" value={user.name} onChange={handleChange} placeholder="First Name" required />
+        <input name="surname" value={user.surname} onChange={handleChange} placeholder="Surname" required />
+        <input name="dob" type="date" value={user.dob} onChange={handleChange} required />
+        <input name="address" value={user.address} onChange={handleChange} placeholder="Address" required />
+        <input name="phone" value={user.phone} onChange={handleChange} placeholder="Phone" required />
+        <input name="email" value={user.email} onChange={handleChange} placeholder="Email" type="email" required />
         <button type="submit">Register</button>
       </form>
     </div>
