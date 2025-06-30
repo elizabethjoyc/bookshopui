@@ -1,0 +1,31 @@
+/* src/components/Navbar.css */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1a1a1a;
+  padding: 1rem 2rem;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+}
+
+.navbar-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #ffffff;
+  text-align: center;
+}
+
+.navbar-links a {
+  color: #ffffff;
+  margin: 0 0.5rem;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.2s ease-in-out;
+}
+
+.navbar-links a:hover {
+  color: #ffcc00;
+  text-decoration: underline;
+}
